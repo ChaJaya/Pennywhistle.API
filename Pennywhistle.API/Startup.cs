@@ -58,6 +58,7 @@ namespace Pennywhistle.API
                 app.UseOpenApi();
                 app.UseSwaggerUi3();
             }
+            app.ConfigureExceptionHandler();
             app.UseExceptionHandler("/errors");
 
             app.UseHttpsRedirection();
