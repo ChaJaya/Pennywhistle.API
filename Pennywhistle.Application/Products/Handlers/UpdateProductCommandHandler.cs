@@ -37,34 +37,27 @@ namespace Pennywhistle.Application.Products.Handlers
         /// <returns></returns>
         public async Task<int> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            try
+
+            //can add this to a separate repository
+            var product = await _context.Products.Where(a => a.Id == request.Id).FirstOrDefaultAsync();
+
+            if (product == null)
             {
-                //can add this to a separate repository
-                var product = await _context.Products.Where(a => a.Id == request.Id).FirstOrDefaultAsync();
-
-                if (product == null)
-                {
-                    return default;
-                }
-                else
-                {
-                    product.Name = request.Name;
-                   // product.FullSku = request.FullSku;
-                    product.Sku = request.Sku;
-                    product.Size = request.Size;
-                    product.Price = request.Price;
-
-                    await _context.SaveChangesAsync(cancellationToken);
-                    return product.Id;
-                }
+                return default;
             }
-            catch (Exception ex)
+            else
             {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
+                product.Name = request.Name;
+                // product.FullSku = request.FullSku;
+                product.Sku = request.Sku;
+                product.Size = request.Size;
+                product.Price = request.Price;
+
+                await _context.SaveChangesAsync(cancellationToken);
+                return product.Id;
             }
 
-        } 
+        }
         #endregion
     }
 }

@@ -41,23 +41,16 @@ namespace Pennywhistle.Application.Customer.Handlers
         public async Task<IList<Order>> Handle(GetAllOrdersForCustomerQuery request, CancellationToken cancellationToken)
         {
             var result = new List<Order>();
-            try
+
+            //can add this to a separate repository
+            var data = await _context.Orders.Where(a => a.UserId.Value == new Guid(request.UserId)).ToListAsync();
+            if (data != null)
             {
-                //can add this to a separate repository
-                var data = await _context.Orders.Where(a => a.UserId.Value == new Guid(request.UserId)).ToListAsync();
-                if (data != null)
-                {
-                    result = _mapper.Map<List<Order>>(data);
-                }
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
+                result = _mapper.Map<List<Order>>(data);
             }
 
             return result;
-        } 
+        }
         #endregion
     }
 }

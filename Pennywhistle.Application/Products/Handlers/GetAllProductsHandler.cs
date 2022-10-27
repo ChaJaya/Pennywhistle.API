@@ -39,23 +39,16 @@ namespace Pennywhistle.Application.Products.Handlers
         public async Task<IList<Product>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
         {
             var result = new List<Product>();
-            try
+
+            //can add this to a separate repository
+            var data = await _context.Products.ToListAsync();
+            if (data != null)
             {
-                //can add this to a separate repository
-                var data = await _context.Products.ToListAsync();
-                if (data != null)
-                {
-                    result = _mapper.Map<List<Product>>(data);
-                }
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
+                result = _mapper.Map<List<Product>>(data);
             }
 
             return result;
-        } 
+        }
         #endregion
     }
 }

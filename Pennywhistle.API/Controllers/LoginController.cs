@@ -38,16 +38,8 @@ namespace Pennywhistle.API.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login(Login logIn)
         {
-            try
-            {
-                var resultData = await _identityService.Login(logIn);
-                return Ok(resultData);
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+            var resultData = await _identityService.Login(logIn);
+            return Ok(resultData);
         }
 
         /// <summary>
@@ -59,17 +51,9 @@ namespace Pennywhistle.API.Controllers
         [Route("CreateCustomer")]
         public async Task<IActionResult> CreateCustomerUserAsync(CustomerRegsiter register)
         {
-            try
-            {
-                var resultData = await _identityService.CreateCustomerUserAsync(register);
-                return Ok(resultData.UserId);
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
-        } 
+            var resultData = await _identityService.CreateCustomerUserAsync(register);
+            return Ok(resultData.UserId);
+        }
         #endregion
     }
 }

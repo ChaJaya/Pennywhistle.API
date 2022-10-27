@@ -36,64 +36,58 @@ namespace Pennywhistle.Application.CommonFunction.Handler
         public async Task<Order> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
         {
 
-            try
+            //can add this to a separate repository
+            var order = _context.Orders.Where(a => a.Id == request.OrderId).FirstOrDefault();
+
+            if (order == null)
             {
-                //can add this to a separate repository
-                var order = _context.Orders.Where(a => a.Id == request.OrderId).FirstOrDefault();
-
-                if (order == null)
-                {
-                    return default;
-                }
-                else
-                {
-                    //With the time if business grows to a higer level ,and if we have to add more roles and order status details
-                    // we will have to refator this code since this will violate open close principle
-                    if (request.LoggedInUserRole == UserRoles.AdminRoleName)
-                    {
-                        order.OrderStatus = request.OrderStatus;
-                    }
-                    if (request.LoggedInUserRole == UserRoles.StoreStaffRoleName)
-                    {
-                        order.OrderStatus = (int)OrderStatus.CancelledOrder;
-                    }
-                    if (request.LoggedInUserRole == UserRoles.KitchenStaffRoleName)
-                    {
-                        if (request.OrderStatus == (int)OrderStatus.PrepareOrder)
-                        {
-                            order.OrderStatus = (int)OrderStatus.PrepareOrder;
-                        }
-                        if (request.OrderStatus == (int)OrderStatus.ReadyToPickUp)
-                        {
-                            order.OrderStatus = (int)OrderStatus.ReadyToPickUp;
-                        }
-
-                    }
-                    if (request.LoggedInUserRole == UserRoles.DeliveryStaffRoleName)
-                    {
-                        order.OrderStatus = (int)OrderStatus.OrderDelivered;
-                    }
-
-                    if ((request.LoggedInUserRole == UserRoles.AdminRoleName) && (order.OrderStatus == 5))
-                    {
-                        order.OrderStatus = (int)OrderStatus.OrderComplete;
-                    }
-
-
-                    await _context.SaveChangesAsync(cancellationToken);
-
-                    _mailService.SendEmail(request.CustomerEmail);
-
-                    return order;
-                }
+                return default;
             }
-            catch (Exception ex)
+            else
             {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
+                //With the time if business grows to a higer level ,and if we have to add more roles and order status details
+                // we will have to refator this code since this will violate open close principle
+                if (request.LoggedInUserRole == UserRoles.AdminRoleName)
+                {
+                    order.OrderStatus = request.OrderStatus;
+                }
+                if (request.LoggedInUserRole == UserRoles.StoreStaffRoleName)
+                {
+                    order.OrderStatus = (int)OrderStatus.CancelledOrder;
+                }
+                if (request.LoggedInUserRole == UserRoles.KitchenStaffRoleName)
+                {
+                    if (request.OrderStatus == (int)OrderStatus.PrepareOrder)
+                    {
+                        order.OrderStatus = (int)OrderStatus.PrepareOrder;
+                    }
+                    if (request.OrderStatus == (int)OrderStatus.ReadyToPickUp)
+                    {
+                        order.OrderStatus = (int)OrderStatus.ReadyToPickUp;
+                    }
+
+                }
+                if (request.LoggedInUserRole == UserRoles.DeliveryStaffRoleName)
+                {
+                    order.OrderStatus = (int)OrderStatus.OrderDelivered;
+                }
+
+                if ((request.LoggedInUserRole == UserRoles.AdminRoleName) && (order.OrderStatus == 5))
+                {
+                    order.OrderStatus = (int)OrderStatus.OrderComplete;
+                }
+
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                _mailService.SendEmail(request.CustomerEmail);
+
+                return order;
             }
 
-        } 
+
+
+        }
         #endregion
     }
 }

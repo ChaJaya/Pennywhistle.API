@@ -40,39 +40,32 @@ namespace Pennywhistle.Application.Report.Handlers
         /// <returns></returns>
         public async Task<IList<Order>> Handle(GetOrderForDateReportQuery request, CancellationToken cancellationToken)
         {
-            try
+
+            //can add this to a separate repository
+            if (request.OrderStatus == -1)
             {
-                //can add this to a separate repository
-                if (request.OrderStatus == -1)
+                var result = new List<Order>();
+                var data = await _context.Orders.Where(a => a.Created.Date == request.ForThisDate.Date).ToListAsync();
+                if (data != null)
                 {
-                    var result = new List<Order>();
-                    var data = await _context.Orders.Where(a => a.Created.Date == request.ForThisDate.Date).ToListAsync();
-                    if (data != null)
-                    {
-                        result = _mapper.Map<List<Order>>(data);
-                    }
-
-                    return result;
+                    result = _mapper.Map<List<Order>>(data);
                 }
-                else
-                {
-                    var result = new List<Order>();
-                    var data = await _context.Orders.Where(a => a.Created.Date == request.ForThisDate.Date && request.OrderStatus == a.OrderStatus).ToListAsync();
-                    if (data != null)
-                    {
-                        result = _mapper.Map<List<Order>>(data);
-                    }
 
-                    return result;
-                }
+                return result;
             }
-            catch (Exception ex)
+            else
             {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
+                var result = new List<Order>();
+                var data = await _context.Orders.Where(a => a.Created.Date == request.ForThisDate.Date && request.OrderStatus == a.OrderStatus).ToListAsync();
+                if (data != null)
+                {
+                    result = _mapper.Map<List<Order>>(data);
+                }
+
+                return result;
             }
 
-        } 
+        }
         #endregion
     }
 }

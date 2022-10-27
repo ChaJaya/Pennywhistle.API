@@ -191,24 +191,19 @@ namespace Pennywhistle.Application.Helpers
         /// <returns>The string.</returns>
         private static string GetCellValue(SpreadsheetDocument document, Cell cell)
         {
-            try
-            {
-                SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
-                string value = cell.CellValue.InnerXml;
 
-                if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
-                {
-                    return stringTablePart.SharedStringTable.ChildElements[int.Parse(value)].InnerText;
-                }
-                else
-                {
-                    return value;
-                }
-            }
-            catch
+            SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
+            string value = cell.CellValue.InnerXml;
+
+            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
             {
-                throw;
+                return stringTablePart.SharedStringTable.ChildElements[int.Parse(value)].InnerText;
             }
+            else
+            {
+                return value;
+            }
+
         }
 
         /// <summary>
@@ -218,30 +213,25 @@ namespace Pennywhistle.Application.Helpers
         /// <returns>The index.</returns>
         private static int CellReferenceToIndex(Cell cell)
         {
-            try
-            {
-                int index = 0;
-                string reference = cell.CellReference.ToString().ToUpper();
-                foreach (char ch in reference)
-                {
-                    if (char.IsLetter(ch))
-                    {
-                        int value = (int)ch - (int)'A';
-                        index = (index == 0) ? value : ((index + 1) * 26) + value;
-                    }
-                    else
-                    {
-                        return index;
-                    }
-                }
 
-                return index;
-            }
-            catch
+            int index = 0;
+            string reference = cell.CellReference.ToString().ToUpper();
+            foreach (char ch in reference)
             {
-                throw;
+                if (char.IsLetter(ch))
+                {
+                    int value = (int)ch - (int)'A';
+                    index = (index == 0) ? value : ((index + 1) * 26) + value;
+                }
+                else
+                {
+                    return index;
+                }
             }
-        } 
+
+            return index;
+
+        }
         #endregion
     }
 }

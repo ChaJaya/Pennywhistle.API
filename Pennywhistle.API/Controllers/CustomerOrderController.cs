@@ -38,15 +38,9 @@ namespace Pennywhistle.API.Controllers
         [Route("CreateOrder")]
         public async Task<IActionResult> CreateOrder(CreateOrderCommand command)
         {
-            try
-            {
-                return Ok(await Mediator.Send(command));
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+
+            return Ok(await Mediator.Send(command));
+
         }
 
         /// <summary>
@@ -58,16 +52,10 @@ namespace Pennywhistle.API.Controllers
         [Route("GetOrderHistoryForCustomer")]
         public async Task<IActionResult> GetHistory(string userId)
         {
-            try
-            {
-                //best practice : can return a different view model without exposing the domain entity
-                return Ok(await Mediator.Send(new GetAllOrdersForCustomerQuery { UserId = userId }));
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+
+            //best practice : can return a different view model without exposing the domain entity
+            return Ok(await Mediator.Send(new GetAllOrdersForCustomerQuery { UserId = userId }));
+
         }
 
         /// <summary>
@@ -79,17 +67,11 @@ namespace Pennywhistle.API.Controllers
         [Route("GetCurrentOrderForCustomer")]
         public async Task<IActionResult> GetCurrentOrder(string userId)
         {
-            try
-            {
-                //best practice : can return a different view model without exposing the domain entity
-                return Ok(await Mediator.Send(new GetCustomerCurrentOrderQuery { UserId = userId }));
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
-        } 
+
+            //best practice : can return a different view model without exposing the domain entity
+            return Ok(await Mediator.Send(new GetCustomerCurrentOrderQuery { UserId = userId }));
+
+        }
         #endregion
     }
 }

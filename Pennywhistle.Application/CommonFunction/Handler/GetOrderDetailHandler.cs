@@ -34,23 +34,17 @@ namespace Pennywhistle.Application.CommonFunction.Handler
         public async Task<Order> Handle(GetOrderDetailQuery request, CancellationToken cancellationToken)
         {
             var result = new Order();
-            try
+
+            //can add this to a separate repository
+            var data = await _context.Orders.Where(a => a.Id == request.OrderId).Include(s => s.Products).SingleOrDefaultAsync();
+            if (data != null)
             {
-                //can add this to a separate repository
-                var data = await _context.Orders.Where(a => a.Id == request.OrderId).Include(s => s.Products).SingleOrDefaultAsync();
-                if (data != null)
-                {
-                    result = _mapper.Map<Order>(data);
-                }
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
+                result = _mapper.Map<Order>(data);
             }
 
+
             return result;
-        } 
+        }
         #endregion
     }
 }

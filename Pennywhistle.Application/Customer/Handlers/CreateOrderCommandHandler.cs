@@ -26,7 +26,7 @@ namespace Pennywhistle.Application.Customer.Handlers
         {
             _context = context;
             _mapper = mapper;
-        } 
+        }
         #endregion
 
         /// <summary>
@@ -37,22 +37,16 @@ namespace Pennywhistle.Application.Customer.Handlers
         /// <returns></returns>
         public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                //can add this to a separate repository
-                var entity = _mapper.Map<Order>(request);
-                entity.ProductItemId = request.ProductItemId;
-                entity.OrderStatus = (int)OrderStatus.PendingOrder;
 
-                _context.Orders.Add(entity);
-                await _context.SaveChangesAsync(cancellationToken);
-                return entity.Id;
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
-            }
+            //can add this to a separate repository
+            var entity = _mapper.Map<Order>(request);
+            entity.ProductItemId = request.ProductItemId;
+            entity.OrderStatus = (int)OrderStatus.PendingOrder;
+
+            _context.Orders.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+            return entity.Id;
+
         }
     }
 }

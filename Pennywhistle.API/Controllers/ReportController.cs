@@ -61,17 +61,11 @@ namespace Pennywhistle.API.Controllers
         [Route("GetOrderHistoryForCustomerReport")]
         public async Task<IActionResult> GetOrderHistoryForCustomerReport(string userId)
         {
-            try
-            {
-                var data = await Mediator.Send(new GetAllOrdersForCustomerQuery { UserId = userId });
-                var excelData = ExcelGenerator.GenerateExcelFromList(data, "report").ReadAsByteArrayAsync().Result;
-                return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CustomerOrderHistory.xlsx");
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+
+            var data = await Mediator.Send(new GetAllOrdersForCustomerQuery { UserId = userId });
+            var excelData = ExcelGenerator.GenerateExcelFromList(data, "report").ReadAsByteArrayAsync().Result;
+            return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CustomerOrderHistory.xlsx");
+
         }
 
         /// <summary>
@@ -82,19 +76,10 @@ namespace Pennywhistle.API.Controllers
         [Route("GetCustomerDetailsReport")]
         public async Task<IActionResult> GetCustomerDetailsReport()
         {
-            try
-            {
-                var data = _identityService.GetUsersInCustomerRole();
-                var excelData = ExcelGenerator.GenerateExcelFromList(data, "report").ReadAsByteArrayAsync().Result;
-                return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RegisterdCustomers.xlsx");
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
-
-        } 
+            var data = _identityService.GetUsersInCustomerRole();
+            var excelData = ExcelGenerator.GenerateExcelFromList(data, "report").ReadAsByteArrayAsync().Result;
+            return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RegisterdCustomers.xlsx");
+        }
         #endregion
     }
 }

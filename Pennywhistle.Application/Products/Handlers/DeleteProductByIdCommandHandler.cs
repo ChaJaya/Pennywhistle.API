@@ -36,20 +36,13 @@ namespace Pennywhistle.Application.Products.Handlers
         /// <returns></returns>
         public async Task<int> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
         {
-            try
-            {
-                //can add this to a separate repository
-                var product = _context.Products.Where(a => a.Id == command.Id).FirstOrDefault();
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync(cancellationToken);
-                return product.Id;
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
-            }
-        } 
+
+            //can add this to a separate repository
+            var product = _context.Products.Where(a => a.Id == command.Id).FirstOrDefault();
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync(cancellationToken);
+            return product.Id;
+        }
         #endregion
     }
 }

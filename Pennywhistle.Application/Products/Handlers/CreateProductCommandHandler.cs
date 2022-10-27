@@ -37,20 +37,14 @@ namespace Pennywhistle.Application.Products.Handlers
         /// <returns></returns>
         public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                //can add this to a separate repository
-                var entity = _mapper.Map<Product>(request);
 
-                _context.Products.Add(entity);
-                await _context.SaveChangesAsync(cancellationToken);
-                return entity.Id;
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
-            }
+            //can add this to a separate repository
+            var entity = _mapper.Map<Product>(request);
+
+            _context.Products.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+            return entity.Id;
+
         }
         #endregion
     }

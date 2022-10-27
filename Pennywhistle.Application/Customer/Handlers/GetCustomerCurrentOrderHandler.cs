@@ -40,19 +40,12 @@ namespace Pennywhistle.Application.Customer.Handlers
         public async Task<Order> Handle(GetCustomerCurrentOrderQuery request, CancellationToken cancellationToken)
         {
             var result = new Order();
-            try
+
+            //can add this to a separate repository
+            var data = await _context.Orders.Where(a => a.UserId.Value == new Guid(request.UserId) && (a.OrderStatus != (int)OrderStatus.OrderComplete && a.OrderStatus != (int)OrderStatus.CancelledOrder)).Include(s => s.Products).FirstOrDefaultAsync();
+            if (data != null)
             {
-                //can add this to a separate repository
-                var data = await _context.Orders.Where(a => a.UserId.Value == new Guid(request.UserId) && (a.OrderStatus != (int)OrderStatus.OrderComplete && a.OrderStatus != (int)OrderStatus.CancelledOrder)).Include(s => s.Products).FirstOrDefaultAsync();
-                if (data != null)
-                {
-                    result = _mapper.Map<Order>(data);
-                }
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                throw;
+                result = _mapper.Map<Order>(data);
             }
 
             return result;

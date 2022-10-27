@@ -39,15 +39,8 @@ namespace Pennywhistle.API.Controllers
         [Route("CreateProductItem")]
         public async Task<IActionResult> CreateProductItem(CreateProductCommand command)
         {
-            try
-            {
-                return Ok(await Mediator.Send(command));
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+
+            return Ok(await Mediator.Send(command));
         }
 
         /// <summary>
@@ -78,17 +71,8 @@ namespace Pennywhistle.API.Controllers
         [Route("GetAllProducts")]
         public async Task<IActionResult> GetAllProducts()
         {
-            try
-            {
-
-                //best practice : can return a different view model without exposing the domain entity
-                return Ok(await Mediator.Send(new GetAllProductQuery()));
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+            //best practice : can return a different view model without exposing the domain entity
+            return Ok(await Mediator.Send(new GetAllProductQuery()));
         }
 
         /// <summary>
@@ -100,16 +84,9 @@ namespace Pennywhistle.API.Controllers
         [Route("DeleteProductItem")]
         public async Task<IActionResult> DeleteProductItem([FromBody] int id)
         {
-            try
-            {
-                return Ok(await Mediator.Send(new DeleteProductCommand { Id = id }));
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
-        } 
+
+            return Ok(await Mediator.Send(new DeleteProductCommand { Id = id }));
+        }
         #endregion
 
     }

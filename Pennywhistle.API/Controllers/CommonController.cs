@@ -23,20 +23,12 @@ namespace Pennywhistle.API.Controllers
         /// </summary>
         /// <param name="orderId">order id</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("{orderId}")]
         [Route("GetOrderDetail")]
         public async Task<IActionResult> GetOrderDetail(int orderId)
         {
-            try
-            {
-                //best practice : can return a different view model without exposing the domain entity
-                return Ok(await Mediator.Send(new GetOrderDetailQuery { OrderId = orderId }));
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+            //best practice : can return a different view model without exposing the domain entity
+            return Ok(await Mediator.Send(new GetOrderDetailQuery { OrderId = orderId }));
         }
 
         /// <summary>
@@ -49,16 +41,10 @@ namespace Pennywhistle.API.Controllers
         [Authorize(Roles = "Admin,DeliveryStaff,KitchenStaff,StoreStaff")]
         public async Task<IActionResult> UpdateOrderStatus(UpdateOrderStatusCommand command)
         {
-            try
-            {
-                //best practice : can return a different view model without exposing the domain entity
-                return Ok(await Mediator.Send(command));
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+
+            //best practice : can return a different view model without exposing the domain entity
+            return Ok(await Mediator.Send(command));
+
         }
         #endregion
     }

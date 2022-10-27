@@ -38,16 +38,8 @@ namespace Pennywhistle.API.Controllers
         [Route("CreateEmployeeUser")]
         public async Task<IActionResult> CreateEmployeeUser(Register register)
         {
-            try
-            {
-                var resultData = await _identityService.CreateUserAsync(register);
-                return Ok(resultData.UserId);
-            }
-            catch (Exception ex)
-            {
-                NLogErrorLog.LogErrorMessages(ex.Message);
-                return BadRequest(NLogErrorLog.CommonErrorMessage);
-            }
+            var resultData = await _identityService.CreateUserAsync(register);
+            return Ok(resultData.UserId);
         }
         #endregion
 
